@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ================= Enums =================
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum Gender {
+  LAKI_LAKI
+  PEREMPUAN
+}
+
+// ================ User ===================
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  name          String
+  password      String
+  role          UserRole        @default(USER)
+  AnswerSession AnswerSession[]
+
+  @@map("user")
+}
+
+// ======== Data Pasien (tetap) ============
+model PasienInformation {
+  id                        String   @id @default(cuid())
+  name                      String   @db.VarChar(150)
+  gender                    Gender
+  address                   String   @db.VarChar(255)
+  phone                     String   @unique @db.VarChar(30)
+  siapMerencanakanKehamilan Boolean  @default(false)
+  rencanaDalamBerapaBulan   Int?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  answerSessions AnswerSession[]
+
+  @@index([name])
+  @@map("pasien_information")
+}
+
+// ============ Bank Pertanyaan ============
+model Question {
+  id       String           @id @default(cuid())
+  question String           @db.VarChar(255) // Teks pertanyaan
+  options  QuestionOption[] // Opsi-opsi jawaban
+  answers  Answer[] // Jawaban yang merefer ke pertanyaan ini
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("question")
+}
+
+model QuestionOption {
+  id         String @id @default(cuid())
+  questionId String
+  value      String
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  answers  Answer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Urutan unik per pertanyaan
+  @@index([questionId])
+  @@map("question_option")
+}
+
+// ====== Sesi Pengisian (untuk riwayat) ======
+model AnswerSession {
+  id          String    @id @default(cuid())
+  pasienId    String
+  startedAt   DateTime  @default(now())
+  submittedAt DateTime?
+  summary     String?   @db.LongText
+
+  percentage Int?
+
+  pasien  PasienInformation @relation(fields: [pasienId], references: [id], onDelete: Cascade)
+  answers Answer[]
+  user_id String
+  user    User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([pasienId])
+  @@map("answer_session")
+}
+
+// ============== Jawaban ====================
+model Answer {
+  id               String @id @default(cuid())
+  sessionId        String
+  questionId       String
+  selectedOptionId String
+
+  session        AnswerSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question       Question       @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  selectedOption QuestionOption @relation(fields: [selectedOptionId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, questionId])
+  @@index([questionId])
+  @@index([selectedOptionId])
+  @@map("answer")
+}
+
+model VideoInformation {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  description String
+  is_active   Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model News {
+  id        String   @id @default(cuid())
+  title     String
+  thumbnail String
+  is_active Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
