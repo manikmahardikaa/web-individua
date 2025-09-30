@@ -28,10 +28,15 @@ import {
   PictureOutlined,
 } from "@ant-design/icons";
 
-
-
-import { useVideoInformation, useVideoInformations } from "@/app/hooks/video-information";
-import { VideoInformationDataModel, VideoInformationPayloadCreateModel } from "@/app/model/video-information";
+import {
+  useVideoInformation,
+  useVideoInformations,
+} from "@/app/hooks/video-information";
+import {
+  VideoInformationDataModel,
+  VideoInformationPayloadCreateModel,
+} from "@/app/model/video-information";
+import SupaImageUploader from "@/app/utils/image-uploader";
 
 /* ================= Helpers ================= */
 const MAX_TITLE = 200;
@@ -288,6 +293,7 @@ export default function VideoInformationPage() {
                   id: detail?.id ?? editingId,
                   title: detail?.title ?? "",
                   url: detail?.url ?? "",
+                  thumbnail: detail?.thumbnail ?? "",
                   description: detail?.description ?? "",
                   is_active: detail?.is_active ?? true,
                 }
@@ -332,11 +338,14 @@ function VideoForm({
 }: {
   mode: "create" | "edit";
   submitting?: boolean;
-  onSubmit: (payload: VideoInformationPayloadCreateModel) => Promise<void> | void;
+  onSubmit: (
+    payload: VideoInformationPayloadCreateModel
+  ) => Promise<void> | void;
   initialData?: {
     id?: string;
     title: string;
     url: string;
+    thumbnail: string | null;
     description?: string;
     is_active: boolean;
   };
@@ -349,16 +358,24 @@ function VideoForm({
       ? {
           title: initialData.title ?? "",
           url: initialData.url ?? "",
+          thumbnail: initialData.thumbnail ?? "",
           description: initialData.description ?? "",
           is_active: Boolean(initialData.is_active),
         }
-      : { title: "", url: "", description: "", is_active: true };
+      : {
+          title: "",
+          url: "",
+          description: "",
+          is_active: true,
+          thumbnail: "",
+        };
 
   const handleFinish = async (values: VideoInformationPayloadCreateModel) => {
     try {
       const payload: VideoInformationPayloadCreateModel = {
         title: (values.title ?? "").trim().slice(0, MAX_TITLE),
         url: (values.url ?? "").trim().slice(0, MAX_URL),
+        thumbnail: values.thumbnail ?? null,
         description: (values.description ?? "").trim().slice(0, MAX_DESC),
         is_active: Boolean(values.is_active),
       };
@@ -432,6 +449,23 @@ function VideoForm({
           tooltip="Tempelkan link video YouTube (watch/shorts/embed atau youtu.be)."
         >
           <Input placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+        </Form.Item>
+
+        <Form.Item
+          label="Thumbnail"
+          name="thumbnail"
+          required
+          rules={[
+            {
+              validator: async (_, v) =>
+                v
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Thumbnail wajib diunggah")),
+            },
+          ]}
+        >
+          {/* Sesuaikan bucket/folder Supabase-mu */}
+          <SupaImageUploader bucket="web-yoga" folder="thumbnails" />
         </Form.Item>
 
         <Form.Item

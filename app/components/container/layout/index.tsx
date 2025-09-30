@@ -71,7 +71,6 @@ export default function AdminLayout({
               justifyContent: "flex-end",
             }}
           >
-            <Button icon={<NotificationFilled />}></Button>
             <Dropdown
               overlay={menu}
               placement="bottomRight"

@@ -69,7 +69,7 @@ export const SiderAdmin = () => {
         }}
       >
         <Image
-          src="/assets/images/icon.png"
+          src="/assets/images/opening_screen.png"
           alt="OSS"
           preview={false}
           width={32}

@@ -53,7 +53,7 @@ export default function LoginContent() {
           }}
         >
           <Image
-            src="/assets/images/icon.png"
+            src="/assets/images/opening_screen.png"
             alt="Illustration"
             preview={false}
             width={400}

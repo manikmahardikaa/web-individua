@@ -14,8 +14,7 @@ export async function callGeminiJSON(
   }: { timeoutMs?: number; maxRetries?: number } = {}
 ): Promise<JsonAny> {
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    // minta balasan JSON murni:
+    model: "gemini-2.5-flash",
     generationConfig: { responseMimeType: "application/json" },
   });
 

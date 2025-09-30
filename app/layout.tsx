@@ -4,7 +4,7 @@ import GlobalProvider from "./components/global-provider";
 import { Poppins } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Yoga Website",
+  title: "Individua Web",
 };
 
 const poppins = Poppins({

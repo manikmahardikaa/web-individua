@@ -123,6 +123,7 @@ model VideoInformation {
   id          String   @id @default(cuid())
   title       String
   url         String
+  thumbnail   String
   description String
   is_active   Boolean
   createdAt   DateTime @default(now())
@@ -130,10 +131,11 @@ model VideoInformation {
 }
 
 model News {
-  id        String   @id @default(cuid())
-  title     String
-  thumbnail String
-  is_active Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  thumbnail   String
+  description String   @db.LongText
+  is_active   Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

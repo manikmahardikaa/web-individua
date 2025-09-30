@@ -278,6 +278,7 @@ function NewsForm({
     title: string;
     thumbnail: string | null;
     is_active: boolean;
+    description?: string | null;
   };
 }) {
   const { notification } = AntdApp.useApp();
@@ -289,8 +290,9 @@ function NewsForm({
           title: initialData.title ?? "",
           thumbnail: initialData.thumbnail ?? null,
           is_active: Boolean(initialData.is_active),
+          description: initialData.description ?? null,
         }
-      : { title: "", thumbnail: null, is_active: true };
+      : { title: "", thumbnail: null, is_active: true, description: null };
 
   const handleFinish = async (values: NewsPayloadCreateModel) => {
     try {
@@ -298,13 +300,14 @@ function NewsForm({
         title: (values.title ?? "").trim().slice(0, MAX_TITLE),
         thumbnail: values.thumbnail ?? null,
         is_active: Boolean(values.is_active),
+        description: values.description ?? null,
       };
 
       if (!payload.title) throw new Error("Judul wajib diisi.");
       if (!payload.thumbnail) throw new Error("Thumbnail wajib diunggah.");
 
       await onSubmit(payload);
-      form.resetFields(); // bersihkan form setelah submit sukses
+      form.resetFields();
     } catch (e: any) {
       notification.error({
         message: "Gagal Simpan",
@@ -347,6 +350,10 @@ function NewsForm({
         >
           {/* Sesuaikan bucket/folder Supabase-mu */}
           <SupaImageUploader bucket="web-yoga" folder="thumbnails" />
+        </Form.Item>
+
+        <Form.Item name="description" label="Deskripsi" required>
+          <Input.TextArea rows={4} />
         </Form.Item>
 
         <Form.Item
