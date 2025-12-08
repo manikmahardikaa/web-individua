@@ -4,6 +4,7 @@ import {
   FormOutlined,
   ReadOutlined,
   PlaySquareOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 export const Sidebar = (): MenuProps["items"] => {
@@ -26,6 +27,12 @@ export const Sidebar = (): MenuProps["items"] => {
       label: "Video Informasi",
       icon: <PlaySquareOutlined />,
       onClick: () => router.push("/dashboard/video-information"),
+    },
+    {
+      key: "/dashboard/user",
+      label: "User",
+      icon: <UserOutlined />,
+      onClick: () => router.push("/dashboard/user"),
     },
   ];
 };
