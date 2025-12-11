@@ -5,6 +5,7 @@ import {
   ReadOutlined,
   PlaySquareOutlined,
   UserOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 
 export const Sidebar = (): MenuProps["items"] => {
@@ -33,6 +34,12 @@ export const Sidebar = (): MenuProps["items"] => {
       label: "User",
       icon: <UserOutlined />,
       onClick: () => router.push("/dashboard/user"),
+    },
+    {
+      key: "/dashboard/history",
+      label: "Riwayat Jawaban",
+      icon: <HistoryOutlined />,
+      onClick: () => router.push("/dashboard/history"),
     },
   ];
 };

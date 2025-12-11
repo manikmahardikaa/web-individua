@@ -5,9 +5,10 @@ export const GET_ANSWER_SESSIONS = async (user_id: string) => {
   const result = await db.answerSession.findMany({
     where: { user_id: user_id },
     include: {
-      answers: { include: { question: true } },
+      answers: { include: { question: true, selectedOption: true } },
       pasien: true,
-    }
+    },
+    orderBy: { startedAt: "desc" },
   });
   return result;
 };

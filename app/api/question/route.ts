@@ -26,6 +26,16 @@ export const GET = async () => {
         { status: error.code }
       );
     }
+
+    console.error("[GET_QUESTIONS]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unexpected error while fetching questions.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -55,5 +65,15 @@ export const POST = async (req: NextRequest) => {
         { status: error.code }
       );
     }
+
+    console.error("[CREATE_QUESTION]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unexpected error while creating question.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 };

@@ -36,6 +36,16 @@ export const GET = async (
         { status: error.code }
       );
     }
+
+    console.error("[GET_QUESTION]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unexpected error while fetching question.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -69,6 +79,16 @@ export const PUT = async (
         { status: error.code }
       );
     }
+
+    console.error("[UPDATE_QUESTION]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unexpected error while updating question.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -101,5 +121,15 @@ export const DELETE = async (
         { status: error.code }
       );
     }
+
+    console.error("[DELETE_QUESTION]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unexpected error while deleting question.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 };

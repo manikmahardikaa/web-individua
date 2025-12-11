@@ -9,7 +9,7 @@ import { Prisma } from "@prisma/client";
 export type AnswerSessionDataModel = Prisma.AnswerSessionGetPayload<{
   include: {
     pasien: true;
-    answers: { include: { question: true } };
+    answers: { include: { question: true; selectedOption: true } };
   };
 }>;
 

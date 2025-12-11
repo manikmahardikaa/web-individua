@@ -77,10 +77,19 @@ export const GET_QUESTION = async (id: string) => {
 };
 
 export const DELETE_QUESTION = async (id: string) => {
-  // relasi QuestionOption → Question sudah onDelete: Cascade, jadi aman
-  const result = await db.question.delete({
-    where: { id },
+  // Pastikan jawaban yang mereferensikan pertanyaan ikut dibersihkan
+  const result = await db.$transaction(async (tx) => {
+    // Answer.questionId & Answer.selectedOptionId memakai onDelete: Restrict,
+    // jadi harus dihapus manual terlebih dahulu sebelum pertanyaan/options dihapus.
+    await tx.answer.deleteMany({ where: { questionId: id } });
+
+    const deletedQuestion = await tx.question.delete({
+      where: { id },
+    });
+
+    return deletedQuestion;
   });
+
   return result;
 };
 
